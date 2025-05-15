@@ -16,3 +16,38 @@ export const invoices = [
     date: '2024-01-02',
   },
 ];
+
+export const users = [
+  {
+    id: '1',
+    name: 'John Doe',
+    email: 'john@example.com',
+  },
+  {
+    id: '2',
+    name: 'Jane Smith',
+    email: 'jane@example.com',
+  },
+];
+
+export const customers = [
+  {
+    id: '123',
+    name: 'Acme Corporation',
+  },
+  {
+    id: '456',
+    name: 'Globex Inc.',
+  },
+];
+
+export const revenue = [
+  {
+    month: 'January',
+    amount: 50000,
+  },
+  {
+    month: 'February',
+    amount: 60000,
+  },
+];
