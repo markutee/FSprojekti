@@ -1,8 +1,15 @@
 import bcrypt from 'bcryptjs';
 import postgres from 'postgres';
-import { invoices, customers, revenue, users } from '../lib/placeholder-data';
+import { invoices, customers, revenue, users as importedUsers } from '../lib/placeholder-data';
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
+
+const defaultUser = {
+  id: '00000000-0000-0000-0000-000000000001',
+  name: 'Demo User',
+  email: 'demo@example.com',
+  password: 'demo1234', // Plaintext for seeding, will be hashed
+};
 
 async function seedUsers() {
   await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
@@ -15,13 +22,15 @@ async function seedUsers() {
     );
   `;
 
+  const allUsers = [defaultUser, ...importedUsers];
+
   const insertedUsers = await Promise.all(
-    users.map(async (user) => {
+    allUsers.map(async (user) => {
       const hashedPassword = await bcrypt.hash(user.password, 10);
       return sql`
         INSERT INTO users (id, name, email, password)
         VALUES (${user.id}, ${user.name}, ${user.email}, ${hashedPassword})
-        ON CONFLICT (id) DO NOTHING;
+        ON CONFLICT (email) DO NOTHING;
       `;
     }),
   );
